@@ -15,11 +15,12 @@
 </div>
 
 <div class = "container">
-<div>
-<h1>minesweeper</h1>
+<div class = "whole_board">
 
+<div class = top>
+<h1>minesweeper</h1>
 <div class = "header">
-    <div id = "flag_count">
+    <div class = "flag_count" id = "flag_count">
     <?php
         $dif_list = ["easy" => ["size" => 8, "nb_bombs" => 10],
         "medium" => ["size" => 14, "nb_bombs" => 40],
@@ -31,8 +32,11 @@
         }
 
         $nb_flags = $dif_list[$last_picked]["nb_bombs"];
-        echo "<img id = 'f' src = 'flag.png'><label for = 'f'>{$nb_flags}/{$nb_flags}</label>";
+        echo "<img id = 'f' src = 'flag.png'><p style = 'padding-left: 5px;'>{$nb_flags}/{$nb_flags}</p>";
     ?>
+    </div>
+    <div class = "clock" id = "clock">
+        <p>00:00</p>
     </div>
     <div class = "dif">
     <form>
@@ -47,6 +51,7 @@
             ?>
         </select>
     </form>
+    </div>
 </div>
 </div>
 

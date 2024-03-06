@@ -9,6 +9,7 @@ var game_end = false;
 const difficulty = {"easy" : {"nb_b" : 10, "s" : 8},
 "medium" : {"nb_b" : 40, "s" : 14},
 "hard" : {"nb_b" : 99, "s" : 20}};
+var time_f;
 
 /* order:
 1 2 3
@@ -30,6 +31,23 @@ function really_around(p1,p2) {
     } else {
         return false;
     }
+}
+
+function update_time() {
+    let cur_time = document.getElementById("clock").querySelector("p").innerHTML.split(":");
+    let min = cur_time[0];
+    let sec = cur_time[1];
+    if (sec == "59") {
+        min = parseInt(min) + 1;
+        sec = 0;
+    } else if (sec == "59" && min == "59") {
+        clearInterval(time_f);
+    } else {
+        sec = parseInt(sec) + 1;
+    }
+    min = min.toString().padStart(2,"0");
+    sec = sec.toString().padStart(2,"0");
+    document.getElementById("clock").querySelector("p").innerHTML = min + ":" + sec;
 }
 
 // initializes the playing field (bombs, numbers,
@@ -104,7 +122,7 @@ function flag(tile) {
         tile.innerHTML = "<img src = 'flag.png'>";
     }
     if (nb_flags !== undefined) {
-        document.getElementById("flag_count").querySelector("label").innerHTML = 
+        document.getElementById("flag_count").querySelector("p").innerHTML = 
         nb_flags + "/" + nb_bombs;
     }
     return false;
@@ -119,8 +137,8 @@ function reveal(cur_pos) {
     nb_revealed += 1;
     states[cur_pos] = " ";
     document.getElementById(cur_pos).className = "grass";
-    document.getElementById(cur_pos).onclick = "";
-    document.getElementById(cur_pos).oncontextmenu = "";
+    document.getElementById(cur_pos).setAttribute("onclick","");
+    document.getElementById(cur_pos).setAttribute("oncontextmenu","return false");
     document.getElementById(cur_pos).innerHTML = values[cur_pos];
     if (values[cur_pos] == " ") {
         for (let i = 0; i < xs.length; i++) {
@@ -137,6 +155,7 @@ function reveal(cur_pos) {
 // displays a message telling the player
 // whether they won or lost.
 function end_screen(win) {
+    clearInterval(time_f);
     game_end = true;
     let e = document.getElementById("end");
     e.querySelector("p").innerHTML = (win)?"you won!!":"you lost :(";
@@ -150,6 +169,7 @@ function end_screen(win) {
 function guess(tile) {
     let pos = tile.id
     if (values == undefined) {
+        time_f = setInterval(update_time,1000);
         fieldInit(parseInt(pos));
     }
     if (!game_end) {
