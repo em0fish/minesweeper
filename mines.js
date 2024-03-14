@@ -1,23 +1,64 @@
-var size = 8;
-var bombs;
-var values;
-var states = new Array();
-var nb_revealed;
-var nb_flags;
-var nb_bombs = 10;
-var game_end = false;
+let size = 8;
+let bombs;
+let values;
+let states = new Array();
+let nb_revealed;
+let nb_flags;
+let nb_bombs = 10;
+let game_end = false;
 const difficulty = {"easy" : {"nb_b" : 10, "s" : 8},
 "medium" : {"nb_b" : 40, "s" : 14},
 "hard" : {"nb_b" : 99, "s" : 20}};
-var time_f;
+let time_f;
+let diff = "easy";
 
 /* order:
 1 2 3
 8   4
 7 6 5
 */
-var xs = [-1,0,1,1,1,0,-1,-1];
-var ys = [-1,-1,-1,0,1,1,1,0];
+let xs = [-1,0,1,1,1,0,-1,-1];
+let ys = [-1,-1,-1,0,1,1,1,0];
+
+// displays table.
+function displayTable() {
+    let light;
+    let pos;
+    let html = "<table border='1px solid #FF0000'>";
+    size = difficulty[diff]["s"];
+    for (let y = 0; y < size; y++) {
+        html += "<tr>";
+        for (let x = 0; x < size; x++) {
+            pos = y*size + x;
+            if ((x % 2 == 0 && y % 2 == 0) 
+            || (x % 2 == 1 && y % 2 == 1)) {
+                light = 1;
+            } else {
+                light = 0;
+            }
+            html += ("<td id = " + pos + " onclick = 'guess(this)' class = " +
+                (light?"light_hidden":"dark_hidden") + " oncontextmenu = 'return flag(this)'> </td>");
+        }
+        html += "</tr>";
+    }
+    html += "</table>";
+    document.getElementById("t").innerHTML = html;
+}
+
+// displays the flag counter + table.
+function initView() {
+    counterBombs = nb_bombs + "/" + nb_bombs;
+    document.getElementById("counter").innerHTML = counterBombs;
+    displayTable();
+}
+
+// when the user changes diffulty, changes the variables
+// diffulty and nb_bombs to well display the changed game.
+function changeDifficulty(option) {
+    diff = option.value;
+    nb_bombs = difficulty[diff]["nb_b"];
+    initView();
+}
 
 // checks if two tiles are really adjacent.
 // to prevent two tiles - one at the end of
@@ -33,6 +74,10 @@ function really_around(p1,p2) {
     }
 }
 
+// updates the timer displayed at the top.
+// function called each second after initializing
+// the game (called by function guess), stops when the 
+// game ends (function endscreen)
 function update_time() {
     let cur_time = document.getElementById("clock").querySelector("p").innerHTML.split(":");
     let min = cur_time[0];
@@ -59,7 +104,6 @@ function fieldInit(init_tile) {
     values = new Array();
     states = new Array();
     nb_revealed = 0;
-    let diff = document.getElementById("d").value;
     size = difficulty[diff]["s"];
     nb_bombs = difficulty[diff]["nb_b"];
     nb_flags = nb_bombs;
@@ -183,3 +227,7 @@ function guess(tile) {
         end_screen(true);
     }
 }
+
+// displays the game for the first time when
+// the page loads with the default difficulty (easy)
+initView();
