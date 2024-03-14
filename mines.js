@@ -20,6 +20,10 @@ let diff = "easy";
 let xs = [-1,0,1,1,1,0,-1,-1];
 let ys = [-1,-1,-1,0,1,1,1,0];
 
+function hide(){
+    document.getElementsByClassName("container_end")[0].style.display = "none";
+}
+
 // displays table.
 function displayTable() {
     let light;
@@ -55,6 +59,7 @@ function initView() {
 // when the user changes diffulty, changes the variables
 // diffulty and nb_bombs to well display the changed game.
 function changeDifficulty(option) {
+    clearVariables();
     diff = option.value;
     nb_bombs = difficulty[diff]["nb_b"];
     initView();
@@ -72,6 +77,20 @@ function really_around(p1,p2) {
     } else {
         return false;
     }
+}
+
+function clearVariables() {
+    values = undefined;
+    if (time_f != undefined) clearInterval(time_f);
+    time_f = undefined;
+    game_end = false;
+    document.getElementById("clock").querySelector("p").innerHTML = "00:00";
+}
+
+
+function resetButton() {
+    clearVariables();
+    initView();
 }
 
 // updates the timer displayed at the top.
@@ -200,6 +219,7 @@ function reveal(cur_pos) {
 // whether they won or lost.
 function end_screen(win) {
     clearInterval(time_f);
+    time_f = undefined;
     game_end = true;
     let e = document.getElementById("end");
     e.querySelector("p").innerHTML = (win)?"you won!!":"you lost :(";

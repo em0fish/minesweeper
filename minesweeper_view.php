@@ -1,11 +1,9 @@
 <div class = "container_end" id = "end">
 <div class = "endscreen">
     <p> you won!! </p>
-    <form>
-        <button id = "again" onclick = "function (this) {this.style.display = 'none'; initView();}">
+        <button id = "again" onclick = "hide(); resetButton()">
             play again?
         </button>
-    </form>
 </div>
 </div>
 
@@ -37,9 +35,7 @@
 <div id = "t"></div>
 
 <div>
-<form>
-    <button onclick = "initView()">restart the game</button>
-</form>
+    <button onclick = "resetButton()">restart the game</button>
 </div>
 </div>
 </div>
